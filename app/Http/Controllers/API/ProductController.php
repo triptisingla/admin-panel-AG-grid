@@ -175,7 +175,14 @@ class ProductController extends BaseController
 
     
     public function deletedProducts(Request $request){
-        $products=Product::onlyTrashed()->get();
+        
+        $products=Product::onlyTrashed()->where('user_id',Auth::user()->id)->get();
+        // dd($products);
+        if(count($products)<=0)
+        {
+            $object='deleted products';
+            return view('empty',compact('object'));
+        }
         return view('showdeleted',compact('products'));
     }
     public function restoreProduct($id)
@@ -193,10 +200,11 @@ class ProductController extends BaseController
     public function deleteProductForever($id)
     {
         // If you have not deleted before
-        $product = Product::find($id);
+        $product = Product::withTrashed()->find($id);
+        // dd($product);
         if($product->user_id!=Auth::user()->id)
         {
-            $right='edit';
+            $right='delete';
             return view('notAuthorized',compact('right'));
         }
 
@@ -204,7 +212,7 @@ class ProductController extends BaseController
         $product = Product::withTrashed()->find($id);
 
         $product->forceDelete(); // This permanently deletes the post for ever!
-
+        // return redirect()->route('products.index');
         return response()->json(["success"=>true]);
         // return redirect()->route('deleted');
     }

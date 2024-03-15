@@ -1,8 +1,10 @@
 <?php
 
 
+use App\Http\Controllers\API\AthleteControllerDoc;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\API\AthleteController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use Cloudinary\Configuration\Configuration;
@@ -51,16 +53,24 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 Route::post('/login', [RegisterController::class, 'login'])->name('login');
 
 
+Route::post('/data',[AthleteController::class,'getAllData']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::middleware('auth')->group(function () {
+
+    
+    Route::get('/viewgrid',function(){
+        return view('viewAthletes');
+    })->name('viewgrid');
+    
+    // Route::post('olympicWinners', [AthleteController::class, 'getData']);
+    Route::post('olympicWinners', [AthleteControllerDoc::class, 'getData']);
+
     Route::get('/dashboard',function(){
         $user = Auth::user();
-
-
 
          //get recent Products
          $products=[];

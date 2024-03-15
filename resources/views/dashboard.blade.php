@@ -43,6 +43,8 @@
                 </div>
               </div>
             </div> -->
+
+            <a class="btn btn-success" href="{{route('viewgrid')}}">AG GRID</a>
             <div class="card-body p-4 text-black">
               <!--<div class="mb-5">
                 <p class="lead fw-normal mb-1">About</p>
